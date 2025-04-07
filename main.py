@@ -1,6 +1,5 @@
 from peewee import *
 import datetime
-import uuid
 
 db = SqliteDatabase('../../db/zigbee.db')
 
