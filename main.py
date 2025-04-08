@@ -1,9 +1,17 @@
 from peewee import *
 from models import NodeParam,NodeData
-import datetime
+import os
+from dotenv import load_dotenv
 import paho.mqtt.publish as publish
+import datetime
+
+load_dotenv()
 
 db = SqliteDatabase('./db/zigbee.db')
+auth = {
+    "username": "user",
+    "password": os.getenv('MQTT_TOKEN')
+}
 
 def manage_node():
     count = NodeParam.select().where(NodeParam.name == "esp32 room 1").count()
@@ -51,6 +59,7 @@ def format_payload(node,data):
     }
     return str(payload)
 
+
 def main():
     db.connect()
     db.create_tables([NodeParam, NodeData], safe=True)
@@ -63,10 +72,10 @@ def main():
 
     data_to_send = get_data_to_send(my_node, new_data)
 
-    print(f"Payload: {format_payload(my_node,data_to_send)}")
-
-    # save_data(my_node, 23.6, 56.3)
-    # publish.single("paho/test/topic", "payload", hostname="mqtt.eclipseprojects.io")
+    try :
+        publish.single(os.getenv("MQTT_TOPIC"), format_payload(my_node,data_to_send),  hostname=os.getenv("MQTT_HOSTNAME"), port=int(os.getenv("MQTT_PORT")), auth=auth)
+    except Exception as e :
+        save_data(my_node, 23.6, 56.3)
 
 
 if __name__ == '__main__':

@@ -1,8 +1,0 @@
-{
-  "node_id": "152d1fcc-07cf-4c0a-85d1-bcfaaf0d89b6",
-  "node_name": "ESP32 room 1",
-  "data": {
-    "temperature" : "23°C",
-    "humidity": "45%"
-  }
-}
