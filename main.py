@@ -4,9 +4,6 @@ import uuid
 
 db = SqliteDatabase('./db/zigbee.db')
 
-class Sensor(Model):
-    uuid = UUIDField(primary_key=True, default=uuid.uuid4())
-
 
 class User(Model):
     username = CharField(unique=True)
