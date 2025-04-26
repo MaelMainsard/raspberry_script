@@ -7,7 +7,21 @@ import datetime
 
 load_dotenv()
 
-db = SqliteDatabase('./db/zigbee.db')
+db_dir = './db'
+if not os.path.exists(db_dir):
+    os.makedirs(db_dir)
+    print(f"Dossier {db_dir} créé avec succès.")
+
+db_path = os.path.join(db_dir, 'zigbee.db')
+
+db = SqliteDatabase(db_path)
+
+if not os.path.exists(db_path) or os.path.getsize(db_path) == 0:
+    print(f"Création de la base de données {db_path}")
+    db.connect()
+    db.create_tables([NodeParam, NodeData])
+    print("Tables créées avec succès.")
+
 auth = {
     "username": "user",
     "password": os.getenv('MQTT_TOKEN')
